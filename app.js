@@ -58,7 +58,13 @@ async function scrape(query){
     for(let i = 0; i < 10; i++) {
         let item = items[i];
         let title = item.title[0];
+        let pubDate = item.pubDate[0];
+        // Change pubDate to sgt
+        let date = new Date(pubDate);
+        let sgtDate = new Date(date.getTime() + 8*60*60*1000); // SGT => UTC+8
+        pubDate = sgtDate.toISOString();
 
+        
         // Parse the HTML in the description to extract the text
         let dom = new JSDOM(item.description[0]);
         let description = dom.window.document.querySelector('a').textContent;
@@ -67,7 +73,8 @@ async function scrape(query){
         let obj = {
             title,
             description,
-            link
+            link,
+            pubDate
         }
         console.log(obj);
     }
